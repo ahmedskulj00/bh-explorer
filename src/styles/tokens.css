@@ -1,0 +1,32 @@
+/**
+ * Design tokens. The palette is a survey chart: a pale cool paper for the
+ * controls, a deep slate board for the map, brass for what you have found and
+ * a muted rust for what you missed.
+ */
+:root {
+  /* paper */
+  --paper: #e9edef;
+  --paper-2: #dfe5e9;
+  --rule: #c7d2d8;
+
+  /* ink */
+  --ink: #132029;
+  --ink-2: #3c5567;
+  --muted: #6f8593;
+
+  /* board */
+  --chart: #152530;
+  --land: #314c5c;
+  --land-out: #1d303b;
+
+  /* status */
+  --signal: #e8b33c;
+  --signal-2: #f7d68c;
+  --missed: #b0574a;
+  --missed-2: #e29a8e;
+
+  /* type */
+  --font-sans: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --font-display: "IBM Plex Sans Condensed", "IBM Plex Sans", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
