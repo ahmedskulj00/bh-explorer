@@ -1,0 +1,22 @@
+.group {
+  display: inline-flex;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--paper-2);
+}
+.option {
+  padding: 4px 9px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  border-right: 1px solid var(--rule);
+}
+.option:last-child { border-right: none; }
+.option:hover { background: #d3dce1; color: var(--ink-2); }
+.on,
+.on:hover {
+  background: var(--chart);
+  color: #f2f6f8;
+}

@@ -1,0 +1,10 @@
+.track {
+  height: 3px;
+  background: var(--rule);
+}
+.fill {
+  display: block;
+  height: 100%;
+  background: var(--signal);
+  transition: width 0.4s ease;
+}
