@@ -1,0 +1,87 @@
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--paper-2);
+}
+.tab {
+  padding: 8px 4px;
+  font-size: 13px;
+  color: var(--ink-2);
+  border-right: 1px solid var(--rule);
+}
+.tab:last-child { border-right: none; }
+.tab:hover { background: #d3dce1; }
+.tabOn,
+.tabOn:hover {
+  background: var(--chart);
+  color: #f2f6f8;
+}
+
+.options {
+  list-style: none;
+  margin: 2px 0 0;
+  padding: 0;
+  border-top: 1px solid var(--rule);
+}
+.option {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  width: 100%;
+  text-align: left;
+  padding: 7px 6px;
+  border-bottom: 1px solid var(--rule);
+}
+.option:hover { background: var(--paper-2); }
+.optionOn { background: var(--paper-2); }
+.optionOn .name { color: var(--ink); font-weight: 600; }
+.optionOn .ordinal {
+  background: var(--signal);
+  border-color: var(--signal);
+  color: #2a1e05;
+}
+.ordinal {
+  flex: none;
+  width: 19px;
+  height: 19px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  transform: translateY(2px);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+}
+.name {
+  flex: 1;
+  font-size: 13.5px;
+  color: var(--ink-2);
+  line-height: 1.35;
+}
+.count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.confirm {
+  margin-top: 8px;
+  padding: 11px;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+}
+.confirmText {
+  margin: 0 0 9px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+.confirmActions {
+  display: flex;
+  gap: 7px;
+}
