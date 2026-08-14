@@ -1,0 +1,29 @@
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.chip {
+  padding: 4px 8px;
+  font-size: 12px;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  color: var(--ink-2);
+}
+.chip:hover {
+  background: #fff;
+  color: var(--ink);
+}
+.missed {
+  background: #f6e3e0;
+  border-color: #e3bdb6;
+  color: #7e3a30;
+}
+.missed:hover {
+  background: #fdeeeb;
+  color: #6a2d24;
+}
