@@ -1,0 +1,17 @@
+.field {
+  width: 100%;
+  padding: 12px;
+  font: inherit;
+  font-size: 16px; /* 16px keeps iOS from zooming the page on focus */
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  color: var(--ink);
+}
+.field::placeholder { color: #9dafba; }
+.field:focus {
+  outline: none;
+  border-color: var(--ink-2);
+  box-shadow: 0 0 0 3px rgba(19, 32, 41, 0.08);
+}
+.field:disabled { background: var(--paper-2); }
