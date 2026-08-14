@@ -1,0 +1,50 @@
+.cluster {
+  position: absolute;
+  z-index: 6;
+  right: 18px;
+  bottom: 18px;
+  display: flex;
+  align-items: flex-end;
+  gap: 7px;
+}
+.buttons {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #345264;
+  border-radius: 3px;
+  overflow: hidden;
+  background: rgba(9, 17, 22, 0.86);
+  backdrop-filter: blur(3px);
+}
+.icon {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-bottom: 1px solid #345264;
+  color: #dce7ed;
+}
+.icon:last-child { border-bottom: none; }
+.icon:hover { background: #20384a; }
+.icon svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.wide {
+  padding: 7px 12px;
+  font-size: 12px;
+  color: #dce7ed;
+  background: rgba(9, 17, 22, 0.86);
+  border: 1px solid #345264;
+  border-radius: 3px;
+  backdrop-filter: blur(3px);
+}
+.wide:hover {
+  background: #20384a;
+  border-color: #4a7189;
+}

@@ -1,0 +1,55 @@
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+.leader {
+  fill: none;
+  stroke: var(--signal-2);
+  stroke-width: 1.1;
+  stroke-dasharray: 3 3;
+}
+.tick { fill: var(--signal-2); }
+.halo {
+  fill: none;
+  stroke: var(--signal-2);
+  stroke-width: 1;
+  stroke-opacity: 0.5;
+}
+
+.label {
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
+  transform: translateY(-100%);
+  padding: 0 0 5px 8px;
+  border-left: 1px solid var(--signal-2);
+  max-width: 230px;
+}
+.left {
+  padding: 0 8px 5px 0;
+  border-left: none;
+  border-right: 1px solid var(--signal-2);
+  text-align: right;
+}
+.name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+  color: #fdf3de;
+  line-height: 1.1;
+}
+.place {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--signal-2);
+}
+
+.missed { border-color: var(--missed-2); }
+.missed .name { color: #fbddd7; }
+.missed .place { color: var(--missed-2); }

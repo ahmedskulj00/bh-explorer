@@ -1,0 +1,138 @@
+.stage {
+  position: relative;
+  background: var(--chart);
+  /* Same reason as the rail: the stage must be free to take the row's height
+     rather than impose one. The floor only applies where the page scrolls. */
+  min-height: 0;
+  overflow: hidden;
+}
+/* fine graticule, drawn in screen space so it never scales with the map */
+.stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(190, 220, 235, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(190, 220, 235, 0.07) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+
+.heading {
+  position: absolute;
+  top: 16px;
+  left: 20px;
+  z-index: 3;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #6e8998;
+}
+.scope {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 500;
+  color: #dce7ed;
+}
+
+.map {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  /* pointer events drive pan and pinch, so the browser must not claim them */
+  touch-action: none;
+}
+.map:active { cursor: grabbing; }
+.map:focus-visible { outline-offset: -2px; }
+
+.shape {
+  stroke: var(--chart);
+  stroke-width: 0.9;
+}
+.out {
+  fill: var(--land-out);
+  stroke-opacity: 0.5;
+  pointer-events: none;
+}
+.todo {
+  fill: var(--land);
+  pointer-events: none;
+}
+.found {
+  fill: var(--signal);
+  cursor: pointer;
+  animation: land 0.45s ease both;
+}
+.found:hover { fill: var(--signal-2); }
+.missed {
+  fill: var(--missed);
+  cursor: pointer;
+}
+.missed:hover { fill: #c56c5e; }
+.focused {
+  stroke: #fbeac4;
+  stroke-width: 1.5;
+}
+@keyframes land {
+  from { fill: var(--signal-2); }
+  to { fill: var(--signal); }
+}
+
+.tooltip {
+  position: absolute;
+  z-index: 6;
+  left: 20px;
+  bottom: 40px;
+  padding: 6px 10px;
+  background: rgba(9, 17, 22, 0.9);
+  color: #dce7ed;
+  border: 1px solid #2e4756;
+  border-radius: 3px;
+  font-size: 12.5px;
+  pointer-events: none;
+}
+.zoom {
+  position: absolute;
+  z-index: 6;
+  right: 18px;
+  bottom: 18px;
+  padding: 7px 12px;
+  background: rgba(9, 17, 22, 0.86);
+  color: #dce7ed;
+  border: 1px solid #345264;
+  border-radius: 3px;
+  font-size: 12px;
+}
+.zoom:hover {
+  background: #20384a;
+  border-color: #4a7189;
+}
+
+@media (max-width: 860px) {
+  .stage { min-height: 56vh; }
+}
+
+.hint {
+  position: absolute;
+  z-index: 3;
+  left: 20px;
+  bottom: 18px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  color: #55707f;
+  pointer-events: none;
+}
