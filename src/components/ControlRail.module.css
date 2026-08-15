@@ -1,0 +1,44 @@
+.rail {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 18px 22px;
+  border-right: 1px solid var(--rule);
+  overflow-y: auto;
+  /* Grid items default to min-height:auto, which means they refuse to shrink
+     below their content and `overflow-y` never engages. Without this the long
+     "missed" list at the end of a round stretches the whole row. */
+  min-height: 0;
+}
+.grow {
+  /* Grow into spare space, but never shrink below the content.
+     `flex: 1` means `flex: 1 1 0%`, and the explicit min-height replaced the
+     implicit `min-height: auto` that otherwise stops a flex item collapsing.
+     Together they let this section be squeezed to 60px while the region list
+     inside it kept its full height and painted over the buttons below. */
+  flex: 1 0 auto;
+}
+.spaced { margin-top: 14px; }
+.empty {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.source {
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--rule);
+  font-size: 10.5px;
+  color: #8698a3;
+  line-height: 1.5;
+}
+
+@media (max-width: 860px) {
+  .rail {
+    order: 2;
+    border-right: none;
+    border-bottom: 1px solid var(--rule);
+    overflow: visible;
+  }
+}

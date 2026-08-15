@@ -1,0 +1,33 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  /* A fixed height, not a minimum. The rail and the stage scroll inside it, so
+     ending a round — which adds a result card and up to 141 "missed" chips —
+     cannot stretch the page and squash the map. */
+  height: 100vh;
+  height: 100dvh;
+  background: var(--paper);
+  color: var(--ink);
+}
+.layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  border-top: 1px solid var(--rule);
+}
+
+@media (max-width: 860px) {
+  /* On narrow screens the rail sits under the map and the page scrolls
+     normally, so the height cap is lifted. */
+  .app {
+    height: auto;
+    min-height: 100dvh;
+  }
+  .layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    overflow: visible;
+  }
+}
