@@ -1,4 +1,4 @@
-# Općine BiH — municipality guessing game
+# BH Explorer — municipality guessing game
 
 Name the 142 municipalities of Bosnia and Herzegovina from memory. Each correct
 name is revealed on the map. Play the whole country, one entity, or a single
