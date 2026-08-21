@@ -50,7 +50,9 @@ const bs: Record<TranslationKey, Phrase> = {
   "map.zoomOut": "Udalji",
   "map.reset": "Vrati prikaz",
   "map.zoomTo": "Približi {name}",
+  "map.satellite": "Satelitski snimak",
 
+  "source.imagery": "Snimci: {credit}",
   "source.note":
     "Granice: geoBoundaries (Runfola i dr.), CC BY 4.0 — pojednostavljene i reprojicirane. Stanari (RS, osnovani 2014) nisu izdvojeni iz Doboja, pa runda broji 142 jedinice umjesto 143.",
 };

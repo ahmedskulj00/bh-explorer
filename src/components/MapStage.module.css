@@ -90,6 +90,56 @@
   to { fill: var(--signal); }
 }
 
+/* ── satellite mode ──
+   Over imagery the fills stop being the map and become a legend on top of it,
+   so every status thins to a wash and the strokes carry the boundaries. These
+   rules follow the opaque ones because `.satellite .found` and `.found:hover`
+   have the same specificity, and the later rule wins. */
+.satellite::before { display: none; } /* the graticule only reads over flat colour */
+.satellite .shape {
+  stroke: var(--sat-stroke);
+  stroke-width: 0.7;
+}
+.satellite .out {
+  fill: var(--sat-out);
+  stroke-opacity: 0.35;
+}
+.satellite .todo { fill: var(--sat-land); }
+.satellite .found {
+  fill: var(--sat-signal);
+  /* `land` ends on an opaque fill and `animation-fill-mode: both` holds it
+     there, over the top of any declaration — so satellite mode needs its own
+     landing, not just its own colour. */
+  animation: land-wash 0.45s ease both;
+}
+.satellite .found:hover { fill: var(--sat-signal-2); }
+.satellite .missed { fill: var(--sat-missed); }
+.satellite .missed:hover { fill: var(--sat-missed-2); }
+.satellite .focused {
+  stroke: #fbeac4;
+  stroke-width: 1.5;
+}
+@keyframes land-wash {
+  from { fill: var(--sat-signal-2); }
+  to { fill: var(--sat-signal); }
+}
+
+.credit {
+  position: absolute;
+  z-index: 3;
+  left: 20px;
+  bottom: 34px;
+  max-width: 52%;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  color: #7e97a5;
+  text-shadow: 0 1px 2px rgba(4, 10, 14, 0.9);
+  pointer-events: none;
+}
+
 .tooltip {
   position: absolute;
   z-index: 6;

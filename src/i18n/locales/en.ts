@@ -57,7 +57,9 @@ const en = {
   "map.zoomOut": "Zoom out",
   "map.reset": "Reset view",
   "map.zoomTo": "Zoom to {name}",
+  "map.satellite": "Satellite imagery",
 
+  "source.imagery": "Imagery: {credit}",
   "source.note":
     "Boundaries: geoBoundaries (Runfola et al.), CC BY 4.0 — simplified and reprojected. Stanari (RS, formed 2014) is not split out from Doboj, so a round counts 142 units rather than 143.",
 } satisfies Record<string, Phrase>;

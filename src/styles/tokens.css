@@ -25,6 +25,16 @@
   --missed: #b0574a;
   --missed-2: #e29a8e;
 
+  /* satellite wash — the same four statuses at an opacity you can read the
+     ground through, since over imagery the fills are a legend, not the map */
+  --sat-out: rgba(7, 15, 20, 0.62);
+  --sat-land: rgba(49, 76, 92, 0.26);
+  --sat-signal: rgba(232, 179, 60, 0.44);
+  --sat-signal-2: rgba(247, 214, 140, 0.6);
+  --sat-missed: rgba(176, 87, 74, 0.46);
+  --sat-missed-2: rgba(197, 108, 94, 0.6);
+  --sat-stroke: rgba(223, 235, 241, 0.5);
+
   /* type */
   --font-sans: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
   --font-display: "IBM Plex Sans Condensed", "IBM Plex Sans", sans-serif;

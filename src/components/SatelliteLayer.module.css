@@ -1,0 +1,19 @@
+.layer {
+  pointer-events: none;
+}
+
+/* Tiles arrive one at a time; a short fade stops the board flickering as a
+   zoom resolves. It is per tile rather than per layer so a tile that arrives
+   late still eases in. */
+.tile {
+  animation: reveal 0.28s ease-out both;
+}
+
+@keyframes reveal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile { animation: none; }
+}

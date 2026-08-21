@@ -3,7 +3,7 @@
 Name the 142 municipalities of Bosnia and Herzegovina from memory. Each correct
 name is revealed on the map. Play the whole country, one entity, or a single
 canton. Available in Bosnian, Croatian, Serbian and English; the map pans and
-zooms.
+zooms, and switches between the drawn board and satellite imagery.
 
 ```bash
 npm install
@@ -39,6 +39,8 @@ rule. That is what makes the tricky parts testable without a browser.
   that reads the layout.
 - `cantons.ts`, `entities.ts` — the administrative units. Canton `no` is the
   official constitutional ordinal, not a display index.
+- `basemap.ts` — the tile source for satellite mode, overridable by environment
+  variable. See "Satellite mode" below for why `labelled` is typed `false`.
 
 ### `src/domain/`
 
@@ -53,7 +55,12 @@ rule. That is what makes the tricky parts testable without a browser.
     over the whole canton for one word.
 - `scope.ts` — what a round covers and how it is tallied by region.
 - `geo.ts` — bounding boxes, viewBox framing, and projecting a map point to a
-  pixel. No projection maths: the source artwork is already projected.
+  pixel. No projection maths: the source artwork is already projected. It also
+  holds the two constants the build script emits, `COUNTRY_BOX` and
+  `COUNTRY_LONLAT`.
+- `tiles.ts` — the one place that does know about projections. It recovers the
+  Mercator transform behind the artwork so raster tiles can be laid under it,
+  and picks the tiles a given view needs.
 
 ### `src/i18n/`
 
@@ -91,7 +98,8 @@ Two consequences worth knowing:
   user drags, pinches or scrolls it becomes theirs and stops chasing, until the
   round changes or they reset. Wheel is bound by hand because React's `onWheel`
   is passive and so cannot stop the page scrolling.
-- - `useElementSize.ts`, `useReducedMotion.ts`, `useRoundClock.ts` — one job each.
+- `useElementSize.ts`, `useReducedMotion.ts`, `useRoundClock.ts`,
+  `useBasemap.ts` — one job each.
 
 ### `src/components/`
 
@@ -100,8 +108,56 @@ Each component sits beside its own `*.module.css`. Shared primitives
 `src/styles/`.
 
 `MapStage` is the only component with real logic, and it is all view logic:
-turning game state into a per-shape status, framing the map, and placing the
-callout.
+turning game state into a per-shape status, framing the map, placing the
+callout, and choosing which tiles the current view needs.
+
+## Satellite mode
+
+The button under the zoom controls swaps the drawn board for satellite imagery
+with the boundaries washed over it. The choice is remembered between visits,
+like the language, and it starts off — the plain board is the game's own
+drawing, and it needs no network.
+
+The imagery registers **exactly**, not approximately, and that is the one thing
+worth understanding here. `scripts/build-municipalities.mjs` projects with
+spherical Mercator and then applies a single linear scale to every shape. Tile
+services use the same projection. Two spaces that differ only by a translation
+and one uniform scale need no resampling and no per-shape correction: recover
+that transform and the tiles sit under the boundaries to the pixel. Had the
+artwork been projected any other way, this feature would have meant
+reprojecting all 142 paths.
+
+`domain/tiles.ts` recovers it from two constants the build script now prints
+together — `COUNTRY_BOX` and `COUNTRY_LONLAT`, one rectangle in SVG units and
+the same rectangle in degrees. Copy one into `geo.ts` without the other and the
+imagery slides out from under the map. `tests/satellite.test.tsx` pushes real
+town-hall coordinates through the transform and requires each to land inside
+its own municipality; Centar Sarajevo is a few kilometres across, so a
+two-kilometre drift fails the suite.
+
+**The basemap must never carry labels.** A hybrid or reference layer would
+print the answers across the board — the same rule that keeps an unfound shape
+free of tooltips and click handlers. `BasemapSource.labelled` is typed as the
+literal `false` rather than `boolean`, so a labelled source cannot be
+configured without failing the build, and a test pins the shipped URL too.
+
+Tiles are positioned in map space, so panning does not move them: only the set
+changes, and only when the view crosses a tile edge. `MapStage` memoises the
+layer on those keys, so most pan frames re-render no `<image>` at all — the
+same bargain the 142 paths make. A coarser underlay sits beneath the sharp
+layer, so zooming never opens a hole while tiles arrive.
+
+The default source is Esri World Imagery, which needs no key. Point it
+somewhere else without touching the code:
+
+```bash
+VITE_BASEMAP_URL="https://example.com/tiles/{z}/{x}/{y}.jpg" \
+VITE_BASEMAP_ATTRIBUTION="© Example" npm run dev
+```
+
+That default suits local play and a demo. Anything carrying real traffic wants
+a provider it holds terms with — and whatever it points at, the attribution
+renders on the map, in every language, whenever the layer is on.
 
 ## What TypeScript is actually doing here
 
@@ -150,6 +206,13 @@ engine and cannot catch it by rendering.
 control to the user. When it was a persistent flag, every later correct guess
 changed the frame it pointed at and yanked the map across the country.
 
+**A fill animation outranks a fill declaration.** The `land` keyframes end on
+an opaque brass and `animation-fill-mode: both` holds that value afterwards,
+over the top of any normal declaration. So satellite mode needed its own
+landing animation, not just its own colour: a translucent
+`.satellite .found { fill }` on its own was silently overridden the moment a
+name was guessed, and only that municipality went opaque.
+
 ## Tests
 
 ```bash
@@ -171,6 +234,8 @@ Two suites, split along the same seam as the code:
   and the drag-versus-click rule through the UI, plus a `regressions` block
   pinning the two map bugs above.
 - `tests/styles.test.ts` — the checks the CSS Modules types cannot make.
+- `tests/satellite.test.tsx` — the georeference against real coordinates, tile
+  selection, and the imagery layer through the UI.
 
 `tests/setup.ts` reports `prefers-reduced-motion`, which collapses the viewBox
 easing to a single step and keeps assertions deterministic.
@@ -198,6 +263,10 @@ neighbour.
 The script also refuses to write if a municipality present in the last build
 has disappeared, which is how a bad release gets caught rather than quietly
 shrinking the game.
+
+It prints `COUNTRY_BOX` and `COUNTRY_LONLAT` at the end of every run. Both are
+copied into `src/domain/geo.ts` by hand, and they have to move together — see
+"Satellite mode" above.
 
 Three defects in the source are corrected in the build and pinned by tests —
 one municipality is filed under an entity's name, one is misspelled, and one is

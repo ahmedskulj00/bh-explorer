@@ -4,16 +4,24 @@ import {
   type Limits,
 } from "../domain/geo.ts";
 import { MUNICIPALITIES, type Municipality } from "../domain/municipalities.ts";
+import { tilesFor } from "../domain/tiles.ts";
+import { useBasemap } from "../hooks/useBasemap.ts";
 import { useElementSize } from "../hooks/useElementSize.ts";
 import { useMapNavigation } from "../hooks/useMapNavigation.ts";
 import { useReducedMotion } from "../hooks/useReducedMotion.ts";
 import { useI18n } from "../i18n/LanguageProvider.tsx";
 import { MapCallout, type CalloutGeometry } from "./MapCallout.tsx";
 import { MapControls } from "./MapControls.tsx";
+import { SatelliteLayer } from "./SatelliteLayer.tsx";
 import styles from "./MapStage.module.css";
 
 const MAX_ZOOM = 40;
 const FALLBACK_ASPECT = 1.4;
+
+/** Levels below the sharp layer for the underlay that fills the gap while a
+ *  zoom loads. Three is 8× coarser: a handful of tiles, already cached from
+ *  the way in, and never a black hole where the imagery has not arrived. */
+const UNDERLAY_STEPS = 3;
 
 type Status = "found" | "missed" | "todo" | "out";
 
@@ -42,6 +50,7 @@ export function MapStage({ inScopeNames, found, revealed, focus, label, scopeTok
   const stageRef = useRef<HTMLElement | null>(null);
   const size = useElementSize(stageRef);
   const reduced = useReducedMotion();
+  const basemap = useBasemap();
   const [hovered, setHovered] = useState<Municipality | null>(null);
 
   const inScope = useMemo(
@@ -72,6 +81,36 @@ export function MapStage({ inScopeNames, found, revealed, focus, label, scopeTok
   }, [baseViewBox, aspect]);
 
   const nav = useMapNavigation({ stageRef, baseViewBox, limits, reduced, resetToken: scopeToken });
+
+  /* Tiles are placed in map space, so a pan does not move them — only the set
+     changes, and only when the view crosses a tile edge. Keying the memo on
+     that set means most pan frames re-render no <image> at all, which is the
+     same bargain the shapes below make. */
+  const { satellite, source } = basemap;
+  const detail = useMemo(
+    () => (satellite ? tilesFor(nav.viewBox, size, { maxZoom: source.maxZoom }) : []),
+    [satellite, source.maxZoom, nav.viewBox, size]
+  );
+  const underlay = useMemo(
+    () =>
+      satellite
+        ? tilesFor(nav.viewBox, size, { maxZoom: source.maxZoom, coarsen: UNDERLAY_STEPS, margin: 0 })
+        : [],
+    [satellite, source.maxZoom, nav.viewBox, size]
+  );
+
+  const imagery = useMemo(
+    () =>
+      satellite && (
+        <>
+          <SatelliteLayer tiles={underlay} source={source} />
+          <SatelliteLayer tiles={detail} source={source} />
+        </>
+      ),
+    // the tile keys are the identity of these lists; their array identity is not
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [satellite, source, detail.map((t) => t.key).join(" "), underlay.map((t) => t.key).join(" ")]
+  );
 
   const statusOf = useCallback(
     (m: Municipality): Status => {
@@ -134,7 +173,10 @@ export function MapStage({ inScopeNames, found, revealed, focus, label, scopeTok
   }, [focused, nav.viewBox, size]);
 
   return (
-    <section className={styles.stage} ref={stageRef}>
+    <section
+      className={[styles.stage, satellite ? styles.satellite : ""].filter(Boolean).join(" ")}
+      ref={stageRef}
+    >
       <div className={styles.heading}>
         <span className={styles.scope}>{label}</span>
       </div>
@@ -148,6 +190,7 @@ export function MapStage({ inScopeNames, found, revealed, focus, label, scopeTok
         aria-label={t("map.aria", { scope: label, done: found.size, total: inScope.length })}
         {...nav.surfaceProps}
       >
+        {imagery}
         <g>{shapes}</g>
       </svg>
 
@@ -166,8 +209,14 @@ export function MapStage({ inScopeNames, found, revealed, focus, label, scopeTok
 
       <p className={styles.hint}>{t("map.hint")}</p>
 
+      {satellite && source.attribution && (
+        <p className={styles.credit}>{t("source.imagery", { credit: source.attribution })}</p>
+      )}
+
       <MapControls
         focusName={focused ? place(focused.name) : null}
+        satellite={satellite}
+        onToggleSatellite={basemap.toggle}
         onZoomIn={nav.zoomIn}
         onZoomOut={nav.zoomOut}
         onReset={nav.reset}

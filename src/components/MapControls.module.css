@@ -26,6 +26,13 @@
 }
 .icon:last-child { border-bottom: none; }
 .icon:hover { background: #20384a; }
+/* A pressed switch has to read as on at a glance, so it takes the same brass
+   the board uses for what you have found. */
+.icon[aria-pressed="true"] {
+  background: #2b4a5f;
+  color: var(--signal-2);
+}
+.icon[aria-pressed="true"]:hover { background: #345a72; }
 .icon svg {
   width: 16px;
   height: 16px;

@@ -270,6 +270,11 @@ console.log(`ADM3 features   ${adm3.length}`);
 console.log(`municipalities  ${records.length}`);
 console.log(`by region       ${JSON.stringify(tally)}`);
 console.log(`COUNTRY_BOX     [${ORIGIN[0]}, ${ORIGIN[1]}, ${ORIGIN[0] + WIDTH}, ${round(ORIGIN[1] + (maxY - minY) * scale)}]`);
+/* The same rectangle in degrees. domain/tiles.ts pairs the two to recover the
+   Mercator transform and lay map tiles under the shapes, so both lines have to
+   be copied into domain/geo.ts together — one without the other misregisters
+   the imagery. Unrounded: a rounded corner here is a visible drift there. */
+const lats = features.flatMap((f) => polygonsOf(f.geometry).flat(2)).map((p) => p[1]);
 if (lost.length) console.error(`\n! dropped since last build: ${lost.join(", ")}`);
 if (gained.length) console.error(`! new since last build (no aliases yet): ${gained.join(", ")}`);
 if (lost.length && !process.env.ALLOW_LOSS) {

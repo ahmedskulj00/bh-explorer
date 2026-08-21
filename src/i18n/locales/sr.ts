@@ -50,7 +50,9 @@ const sr: Record<TranslationKey, Phrase> = {
   "map.zoomOut": "Удаљи",
   "map.reset": "Врати приказ",
   "map.zoomTo": "Приближи {name}",
+  "map.satellite": "Сателитски снимак",
 
+  "source.imagery": "Снимци: {credit}",
   "source.note":
     "Границе: geoBoundaries (Runfola и др.), CC BY 4.0 — поједностављене и репројектоване. Станари (РС, основани 2014) нису издвојени из Добоја, па рунда броји 142 јединице уместо 143.",
 };

@@ -9,6 +9,12 @@ import type { Box, Point, Size, ViewBox } from "../types.ts";
  *  Emitted by scripts/build-municipalities.mjs — update both together. */
 export const COUNTRY_BOX: Box = [21, 130, 798, 880.9];
 
+/** The same rectangle in degrees: [west, south, east, north]. The two boxes are
+ *  one corner correspondence, which is all `domain/tiles.ts` needs to lay map
+ *  tiles under the shapes. Emitted by the same script — update all three
+ *  together, or the imagery slides out from under the boundaries. */
+export const COUNTRY_LONLAT: Box = [15.72429991660789, 42.55719021065977, 19.622780229024386, 45.270541837136136];
+
 export interface Bounded {
   bbox: Box;
 }
